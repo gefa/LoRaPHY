@@ -34,7 +34,7 @@ classdef LoRaPHY < handle & matlab.mixin.Copyable
         cr                        % code rate: (1:4/5 2:4/5 3:4/7 4:4/8)
         payload_len               % payload length
         has_header                % explicit header: 1, implicit header: 0
-        crc                       % crc = 1 if CRC Check is enabled else 0
+        crc                       % crc = 1 if CRC Check is eetabled else 0
         ldr                       % ldr = 1 if Low Data Rate Optimization is enabled else 0
         whitening_seq             % whitening sequence
         crc_generator             % CRC generator with polynomial x^16+x^12+x^5+1
@@ -875,7 +875,13 @@ classdef LoRaPHY < handle & matlab.mixin.Copyable
 
             sym_num = self.calc_sym_num(plen);
             % milliseconds
-            time_ms = (sym_num + 4.25 + self.preamble_len) * (2^self.sf/self.bw) * 1000;
+            %time_ms = (sym_num + 4.25 + self.preamble_len) * (2^self.sf/self.bw) * 1000;
+            
+            %strcat("time_on_air.py ",num2str(sym_num), " ", num2str(self.preamble_len), " ", num2str(self.sf), " ", num2str(self.bw) )
+            %pyrunfile(strcat("time_on_air.py ",num2str(sym_num), " ", num2str(self.preamble_len), " ", num2str(self.sf), " ", num2str(self.bw) ))
+            %time_ms = pyrunfile(sprintf("time_on_air.py %d %d %d %d",sym_num, self.preamble_len, self.sf, self.bw));
+            time_ms = pyrunfile("time_on_air.py","time_ms",sym_num=sym_num, preamble_len=self.preamble_len, sf=self.sf, bw=self.bw);
+            %(strcat("time_on_air.py ",num2str(sym_num), " ", num2str(self.preamble_len), " ", num2str(self.sf), " ", num2str(self.bw) ));
         end
 
         function print_bin(self, flag, vec, size)
